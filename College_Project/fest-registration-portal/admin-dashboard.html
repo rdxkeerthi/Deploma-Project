@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | College Fest 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="app-container glass-panel">
+        <header class="main-header">
+            <div class="logo">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Fest Admin <small>Dashboard</small></span>
+            </div>
+            <div class="header-actions">
+                <span class="welcome-text">Welcome, <strong>Administrator</strong></span>
+                <button id="logout-btn" class="btn btn-sm btn-danger-outline">
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <main class="admin-layout">
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card glass-card">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <div class="stat-info">
+                        <h3 id="total-events">0</h3>
+                        <p>Total Events</p>
+                    </div>
+                </div>
+                <div class="stat-card glass-card">
+                    <i class="fa-solid fa-users"></i>
+                    <div class="stat-info">
+                        <h3 id="total-registrations">0</h3>
+                        <p>Total Registrations</p>
+                    </div>
+                </div>
+                <div class="stat-card glass-card">
+                    <i class="fa-solid fa-fire"></i>
+                    <div class="stat-info">
+                        <h3 id="popular-event">-</h3>
+                        <p>Most Popular</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Creation Section -->
+            <section class="panel-section glass-card">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-plus-circle"></i> Create New Event</h3>
+                </div>
+                <form id="create-event-form" class="event-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="event-title">Event Title</label>
+                            <input type="text" id="event-title" class="glass-input"
+                                placeholder="e.g., Tech Quiz Competition" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="event-category">Category</label>
+                            <select id="event-category" class="glass-input" required>
+                                <option value="">Select Category</option>
+                                <option value="Cultural">Cultural</option>
+                                <option value="Technical">Technical</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Literary">Literary</option>
+                                <option value="Arts">Arts</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="event-date">Event Date</label>
+                            <input type="date" id="event-date" class="glass-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="event-seats">Seat Limit</label>
+                            <input type="number" id="event-seats" class="glass-input" placeholder="e.g., 50" min="1"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-description">Description</label>
+                        <textarea id="event-description" class="glass-input" rows="3"
+                            placeholder="Describe the event..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-plus"></i>
+                        Create Event
+                    </button>
+                </form>
+            </section>
+
+            <!-- Event Management Section -->
+            <section class="panel-section glass-card">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-list"></i> Manage Events</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="glass-table">
+                        <thead>
+                            <tr>
+                                <th>Event Title</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Seats</th>
+                                <th>Registered</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="events-table-body">
+                            <tr>
+                                <td colspan="6" class="empty-state">No events created yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Registrations Viewer Section -->
+            <section class="panel-section glass-card">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-users"></i> Student Registrations</h3>
+                    <select id="event-filter" class="glass-input" style="width: 250px;">
+                        <option value="">All Events</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="glass-table">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Event</th>
+                                <th>Registered On</th>
+                            </tr>
+                        </thead>
+                        <tbody id="registrations-table-body">
+                            <tr>
+                                <td colspan="5" class="empty-state">No registrations yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Event Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-modal">&times;</span>
+            <h3>Edit Event</h3>
+            <form id="edit-event-form">
+                <input type="hidden" id="edit-event-id">
+                <div class="form-group">
+                    <label for="edit-title">Event Title</label>
+                    <input type="text" id="edit-title" class="glass-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-category">Category</label>
+                    <select id="edit-category" class="glass-input" required>
+                        <option value="Cultural">Cultural</option>
+                        <option value="Technical">Technical</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Literary">Literary</option>
+                        <option value="Arts">Arts</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-date">Event Date</label>
+                    <input type="date" id="edit-date" class="glass-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-seats">Seat Limit</label>
+                    <input type="number" id="edit-seats" class="glass-input" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-description">Description</label>
+                    <textarea id="edit-description" class="glass-input" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Update Event</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

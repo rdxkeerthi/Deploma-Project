@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | EquipBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="login-container glass-panel">
+        <div class="login-header">
+            <div class="logo">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>EquipBook</span>
+            </div>
+            <p>College Equipment Booking System</p>
+        </div>
+
+        <div class="login-tabs">
+            <button class="tab-btn active" data-target="student-login-form">Student Login</button>
+            <button class="tab-btn" data-target="admin-login-form">Admin Login</button>
+        </div>
+
+        <div class="login-body">
+            <!-- Student Form -->
+            <form id="student-login-form" class="login-form">
+                <div class="form-group">
+                    <label for="student-name">Full Name</label>
+                    <input type="text" id="student-name" class="glass-input" placeholder="e.g. John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="student-id">Student ID / Roll No</label>
+                    <input type="text" id="student-id" class="glass-input" placeholder="e.g. CS-2024-001" required>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Enter Dashboard</button>
+            </form>
+
+            <!-- Admin Form -->
+            <form id="admin-login-form" class="login-form hidden">
+                <div class="form-group">
+                    <label for="admin-pass">Admin Password</label>
+                    <input type="password" id="admin-pass" class="glass-input" placeholder="Hint: admin123" required>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Access Admin Panel</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

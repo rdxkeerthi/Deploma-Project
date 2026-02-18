@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus-Crave | Menu</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .wallet-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: none;
+            /* Reset button border */
+            font-family: inherit;
+            /* Reset font */
+            font-size: 1rem;
+        }
+
+        .wallet-pill:active {
+            transform: scale(0.95);
+        }
+
+        .category-scroll {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .category-scroll::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari */
+        }
+
+        .category-pill {
+            padding: 0.5rem 1.25rem;
+            background: white;
+            border-radius: 2rem;
+            white-space: nowrap;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-pill.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+            padding-bottom: 80px;
+            /* Space for bottom nav */
+        }
+
+        .menu-item-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            margin-bottom: 0.75rem;
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .add-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+
+        .add-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Floating Cart Button */
+        .cart-float {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: var(--secondary-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 2rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 90;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0);
+            /* Hidden by default */
+        }
+
+        .cart-float.show {
+            transform: scale(1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" style="max-width: 600px; padding-bottom: 80px;">
+        <header class="flex justify-between items-center" style="margin-bottom: 2rem;">
+            <div>
+                <h1>Good Morning! ☀️</h1>
+                <p style="color: var(--text-secondary);">What are you craving today?</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button class="wallet-pill" onclick="addFunds()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
+                        <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+                        <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+                    </svg>
+                    <span id="wallet-balance">₹0.00</span>
+                </button>
+                <button class="btn btn-secondary" style="padding: 0.5rem;" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <script>
+            // Auth Guard
+            if (!localStorage.getItem('nexus_user_token')) {
+                globalThis.location.href = 'login.html';
+            }
+
+            function logout() {
+                localStorage.removeItem('nexus_user_token');
+                globalThis.location.href = 'login.html';
+            }
+        </script>
+
+        <!-- Categories -->
+        <!-- Categories -->
+        <div class="category-scroll" id="category-filter">
+            <button class="category-pill active" data-category="all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                All
+            </button>
+            <button class="category-pill" data-category="breakfast">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" />
+                    <path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7" />
+                </svg>
+                Breakfast
+            </button>
+            <button class="category-pill" data-category="lunch">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8v7a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8" />
+                    <path d="M12 2v6" />
+                    <path d="M22 6s-1.5-4-9-4-9 4-9 4" />
+                </svg>
+                Lunch
+            </button>
+            <button class="category-pill" data-category="drinks">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
+                    <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
+                    <line x1="6" y1="2" x2="6" y2="4" />
+                    <line x1="10" y1="2" x2="10" y2="4" />
+                    <line x1="14" y1="2" x2="14" y2="4" />
+                </svg>
+                Drinks
+            </button>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="menu-grid" id="menu-container">
+            <!-- Items injected here -->
+        </div>
+    </div>
+
+    <!-- Floating Cart Summary -->
+    <a href="checkout.html" class="cart-float" id="cart-float">
+        <div style="position: relative;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="8" cy="21" r="1" />
+                <circle cx="19" cy="21" r="1" />
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+            </svg>
+            <span class="badge" id="cart-count"
+                style="position: absolute; top: -8px; right: -8px; background: var(--error-color); font-size: 0.7rem; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">0</span>
+        </div>
+        <span style="font-weight: 600;" id="cart-total">₹0.00</span>
+        <span>→</span>
+    </a>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg></span>
+            <span>Menu</span>
+        </a>
+        <a href="my-orders.html" class="nav-item">
+            <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                    <polyline points="10 9 9 9 8 9" />
+                </svg></span>
+            <span>Orders</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        import state from './SharedState.js';
+
+        // State for the cart (session only, passed via URL or localStorage for checkout)
+        // For simplicity, we'll store temporary cart in localStorage too so checkout can pick it up
+        let cart = JSON.parse(localStorage.getItem('nexus_temp_cart') || '[]');
+
+        function updateWalletUI() {
+            document.getElementById('wallet-balance').textContent = '₹' + state.getWalletBalance().toFixed(2);
+        }
+
+        function renderMenu(category = 'all') {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '';
+
+            const menuItems = state.getMenu();
+
+            const filtered = category === 'all'
+                ? menuItems
+                : menuItems.filter(item => item.category === category);
+
+            filtered.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'card animate-pop';
+                el.style.padding = '1rem';
+                el.innerHTML = `
+                    <div style="position: relative;">
+                        <img src="${item.image}" alt="${item.name}" class="menu-item-img">
+                        <span style="position: absolute; bottom: 16px; right: 8px; background: rgba(0,0,0,0.6); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem;">${item.prepTime}</span>
+                    </div>
+                    <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">${item.name}</h3>
+                    <div class="flex justify-between items-center" style="margin-top: 0.5rem;">
+                        <span class="item-price">₹${item.price.toFixed(2)}</span>
+                        <button class="add-btn" onclick="addToCart(${item.id})">+</button>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+
+            // Re-attach listeners because onclick string won't see imported module functions easily layout-wise
+            // Better to delegate or attach event listeners
+            document.querySelectorAll('.add-btn').forEach((btn, index) => {
+                btn.onclick = () => addToCart(filtered[index]);
+            });
+        }
+
+        function addToCart(item) {
+            cart.push(item);
+            saveCart();
+            updateCartUI();
+
+            // Visual feedback
+            const float = document.getElementById('cart-float');
+            float.classList.remove('show');
+            void float.offsetWidth; // trigger reflow
+            float.classList.add('show');
+        }
+
+        function saveCart() {
+            localStorage.setItem('nexus_temp_cart', JSON.stringify(cart));
+        }
+
+        function updateCartUI() {
+            const count = cart.length;
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+            document.getElementById('cart-count').textContent = count;
+            document.getElementById('cart-total').textContent = '₹' + total.toFixed(2);
+
+            const float = document.getElementById('cart-float');
+            if (count > 0) {
+                float.classList.add('show');
+            } else {
+                float.classList.remove('show');
+            }
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.category-pill').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.category-pill').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                renderMenu(e.target.dataset.category);
+            });
+        });
+
+        // Init
+        updateWalletUI();
+        renderMenu();
+        updateCartUI();
+
+        // Listen for wallet changes from other tabs
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'nexus_wallet_balance') {
+                updateWalletUI();
+            }
+        });
+
+    </script>
+</body>
+
+</html>

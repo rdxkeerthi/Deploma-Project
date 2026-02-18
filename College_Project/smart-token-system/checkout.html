@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus-Crave | Checkout</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700&display=swap"
+        rel="stylesheet">
+    <script>
+        // Auth Guard
+        if (!localStorage.getItem('nexus_user_token')) {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="container" style="max-width: 600px;">
+        <header class="flex items-center gap-4" style="margin-bottom: 2rem;">
+            <a href="index.html" style="font-size: 1.5rem;">←</a>
+            <h1>Checkout</h1>
+        </header>
+
+        <div class="card" style="margin-bottom: 2rem;">
+            <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Order Summary</h2>
+            <div id="order-items">
+                <!-- Items injected here -->
+            </div>
+            <div style="border-top: 1px solid #eee; margin-top: 1rem; padding-top: 1rem;"
+                class="flex justify-between items-center">
+                <span style="font-weight: 600;">Total</span>
+                <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);"
+                    id="total-amount">₹0.00</span>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 2rem;">
+            <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Payment Method</h2>
+            <div class="flex justify-between items-center"
+                style="padding: 1rem; background: #f9f9f9; border-radius: var(--radius-md);">
+                <div class="flex items-center gap-4">
+                    <span style="font-size: 1.5rem;">💳</span>
+                    <div>
+                        <div style="font-weight: 600;">Student Wallet</div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary);">Balance: <span
+                                id="wallet-balance">...</span></div>
+                    </div>
+                </div>
+                <!-- Status icon -->
+                <div id="balance-status"></div>
+            </div>
+            <div id="error-msg"
+                style="color: var(--error-color); font-size: 0.875rem; margin-top: 0.5rem; display: none;">
+                Insufficient funds. Please top up your wallet.
+            </div>
+        </div>
+
+        <button id="pay-btn" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;" disabled>
+            Confirm Payment
+        </button>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="glass-panel"
+        style="position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 1000;">
+        <div class="card animate-pop" style="text-align: center; max-width: 300px;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+            <h2 style="margin-bottom: 0.5rem;">Order Placed!</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Your digital token is ready.</p>
+            <div style="background: #f0f0f0; padding: 1rem; border-radius: var(--radius-md); font-family: monospace; font-size: 1.5rem; letter-spacing: 4px; font-weight: 700; margin-bottom: 1.5rem;"
+                id="token-display">
+                ----
+            </div>
+            <a href="my-orders.html" class="btn btn-primary" style="width: 100%;">Track Order</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import state from './SharedState.js';
+
+        const cart = JSON.parse(localStorage.getItem('nexus_temp_cart') || '[]');
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        const balance = state.getWalletBalance();
+        const payBtn = document.getElementById('pay-btn');
+        const errorMsg = document.getElementById('error-msg');
+        const balanceStatus = document.getElementById('balance-status');
+
+        function init() {
+            // Render Items
+            const itemsContainer = document.getElementById('order-items');
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">Your cart is empty.</p>';
+            } else {
+                // Group items by name
+                const groups = {};
+                cart.forEach(item => {
+                    if (!groups[item.name]) groups[item.name] = { ...item, quantity: 0 };
+                    groups[item.name].quantity++;
+                });
+
+                Object.values(groups).forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'flex justify-between items-center';
+                    row.style.marginBottom = '0.5rem';
+                    row.innerHTML = `
+                        <div>
+                            <span style="font-weight: 500;">${item.name}</span>
+                            <span style="color: var(--text-secondary); font-size: 0.875rem;">x${item.quantity}</span>
+                        </div>
+                        <span>₹${(item.price * item.quantity).toFixed(2)}</span>
+                    `;
+                    itemsContainer.appendChild(row);
+                });
+            }
+
+            document.getElementById('total-amount').textContent = '₹' + total.toFixed(2);
+            document.getElementById('wallet-balance').textContent = '₹' + balance.toFixed(2);
+
+            // Validation
+            if (cart.length > 0 && balance >= total) {
+                payBtn.disabled = false;
+                balanceStatus.innerHTML = '<span style="color: var(--success-color);">✔</span>';
+            } else {
+                payBtn.disabled = true;
+                if (cart.length > 0) {
+                    errorMsg.style.display = 'block';
+                    balanceStatus.innerHTML = '<span style="color: var(--error-color);">✖</span>';
+                }
+            }
+        }
+
+        payBtn.addEventListener('click', async () => {
+            payBtn.disabled = true;
+            payBtn.textContent = 'Processing...';
+
+            // Simulate network delay
+            await new Promise(r => setTimeout(r, 1000));
+
+            try {
+                const order = state.placeOrder(cart, total);
+
+                // Clear temp cart
+                localStorage.removeItem('nexus_temp_cart');
+
+                // Show Success
+                document.getElementById('token-display').textContent = order.tokenId;
+                document.getElementById('success-modal').style.display = 'flex';
+            } catch (e) {
+                alert(e.message);
+                payBtn.disabled = false;
+                payBtn.textContent = 'Confirm Payment';
+            }
+        });
+
+        init();
+    </script>
+</body>
+
+</html>

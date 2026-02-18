@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Player - Learning Portal</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .learning-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: calc(100vh - 70px);
+            gap: 0;
+        }
+
+        .lesson-sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--bg-tertiary);
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .lesson-item {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .lesson-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .lesson-item.active {
+            background: var(--accent-gradient);
+            color: white;
+        }
+
+        .lesson-item.completed {
+            opacity: 0.7;
+        }
+
+        .lesson-check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .lesson-item.completed .lesson-check {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .lesson-content {
+            flex: 1;
+        }
+
+        .lesson-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .lesson-duration {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+        }
+
+        .player-area {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin-bottom: 2rem;
+        }
+
+        .lesson-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .learning-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .lesson-sidebar {
+                max-height: 300px;
+            }
+        }
+
+        @media print {
+
+            .navbar,
+            .lesson-sidebar,
+            .no-print,
+            .learning-layout {
+                display: none !important;
+            }
+
+            #certificate-view {
+                display: flex !important;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .glass-card {
+                background: rgba(255, 255, 255, 0.95) !important;
+                backdrop-filter: blur(10px) !important;
+                border: 2px solid #6366f1 !important;
+                box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3) !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Preserve gradients and colors */
+            h1,
+            h2,
+            h3,
+            p,
+            svg {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand" style="display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                    style="fill: url(#brandGradient);">
+                    <defs>
+                        <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path
+                        d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3ZM18.82 9L12 12.72L5.18 9L12 5.28L18.82 9ZM17 15.99L12 18.72L7 15.99V12.27L12 15L17 12.27V15.99Z" />
+                </svg>
+                <span>Learning Portal</span>
+            </div>
+            <div class="navbar-menu">
+                <a href="student-dashboard.html" class="navbar-link">← Back to Dashboard</a>
+                <button class="theme-toggle" onclick="UI.toggleTheme()" title="Toggle Theme">
+                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                        class="theme-icon">
+                        <path
+                            d="M12 3V4M12 20V21M4 12H3M6.31412 6.31412L5.5 5.5M17.6859 6.31412L18.5 5.5M6.31412 17.69L5.5 18.5M17.6859 17.69L18.5 18.5M21 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            fill="none" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="learning-layout">
+        <!-- Lesson Sidebar -->
+        <div class="lesson-sidebar">
+            <h3 style="margin-bottom: 1.5rem;">Course Lessons</h3>
+            <div id="lessonList">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Player Area -->
+        <div class="player-area">
+            <div class="glass-card">
+                <div class="flex-between mb-3">
+                    <h1 id="lessonTitle" style="margin-bottom: 0; font-size: 2rem;">Loading...</h1>
+                    <button id="focusToggleBtn" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;"
+                        title="Toggle Theater Mode">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M15 3h6v6M 9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                        </svg>
+                        Focus Mode (F)
+                    </button>
+                </div>
+                <div class="progress-bar mt-2 mb-3">
+                    <div class="progress-fill" id="courseProgress"></div>
+                </div>
+                <p id="progressText" class="text-muted"></p>
+
+                <div id="videoContainer" class="mt-4">
+                    <!-- Video will be loaded here -->
+                </div>
+
+                <div class="glass-card" style="background: var(--bg-tertiary); padding: 1.5rem; margin-top: 2rem;">
+                    <h3>Lesson Resources</h3>
+                    <p id="lessonContent" style="color: var(--text-secondary); margin-top: 1rem;">
+                        This is a placeholder for the lesson content. In a real application, this would contain the
+                        actual lesson material, videos, or interactive content.
+                    </p>
+                    <div id="documentLink" style="margin-top: 1rem;"></div>
+                </div>
+
+                <div class="lesson-controls">
+                    <button id="prevBtn" class="btn btn-secondary" onclick="previousLesson()">← Previous</button>
+                    <button id="completeBtn" class="btn btn-primary" onclick="markComplete()" style="flex: 1;">Mark as
+                        Complete</button>
+                    <button id="nextBtn" class="btn btn-secondary" onclick="nextLesson()">Next →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/courses.js"></script>
+    <script src="js/enrollments.js"></script>
+    <script>
+        // Initialize Auth check
+        try {
+            if (!Auth.getSession() || Auth.getSession().role !== 'student') {
+                window.location.href = 'index.html';
+            }
+        } catch (e) {
+            console.error('Auth check failed:', e);
+            window.location.href = 'index.html';
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const enrollmentId = urlParams.get('id');
+        let enrollment = null;
+        let course = null;
+        let currentLessonIndex = 0;
+        let isFocusMode = false;
+
+        // --- INIT ---
+        function init() {
+            enrollment = Enrollments.getById(enrollmentId);
+            if (!enrollment) {
+                alert('Enrollment not found');
+                window.location.href = 'student-dashboard.html';
+                return;
+            }
+
+            course = Courses.getById(enrollment.courseId);
+            if (!course) {
+                alert('Course not found');
+                window.location.href = 'student-dashboard.html';
+                return;
+            }
+
+            // Check if we should show certificate directly
+            const showCert = urlParams.get('showCert');
+            if (showCert === 'true' && enrollment.completed) {
+                showCompletionCertificate();
+                return;
+            }
+
+            // Resume logic
+            const nextLesson = Enrollments.getNextLesson(enrollmentId);
+            if (nextLesson) {
+                currentLessonIndex = course.lessons.findIndex(l => l.id === nextLesson.id);
+            }
+            if (currentLessonIndex === -1) currentLessonIndex = 0;
+
+            setupEventListeners();
+            setupKeyboardShortcuts();
+            updateLessonDisplay(); // Initial Render
+        }
+
+        // --- EVENT LISTENERS ---
+        function setupEventListeners() {
+            document.getElementById('prevBtn').addEventListener('click', previousLesson);
+            document.getElementById('nextBtn').addEventListener('click', nextLesson);
+            document.getElementById('completeBtn').addEventListener('click', markComplete);
+            document.getElementById('focusToggleBtn').addEventListener('click', toggleFocusMode);
+        }
+
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // Ignore if in input/textarea
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+                switch (e.key.toLowerCase()) {
+                    case 'n': nextLesson(); break;
+                    case 'p': previousLesson(); break;
+                    case 'm': markComplete(); break;
+                    case 'f': toggleFocusMode(); break;
+                }
+            });
+        }
+
+        // --- CORE LOGIC ---
+        function toggleFocusMode() {
+            isFocusMode = !isFocusMode;
+            const layout = document.querySelector('.learning-layout');
+            const btn = document.getElementById('focusToggleBtn');
+            const navbar = document.querySelector('.navbar');
+
+            if (isFocusMode) {
+                layout.style.gridTemplateColumns = '0 1fr'; // CSS Grid magic
+                navbar.style.display = 'none'; // Hide nav for immersion
+                layout.style.height = '100vh';
+                btn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14L3 21"/>
+                    </svg> Exit Focus (F)
+                `;
+                btn.classList.add('active'); // Style for active state
+            } else {
+                layout.style.gridTemplateColumns = '300px 1fr';
+                navbar.style.display = 'block';
+                layout.style.height = 'calc(100vh - 70px)';
+                btn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h6v6M 9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                    </svg> Focus Mode (F)
+                `;
+                btn.classList.remove('active');
+            }
+        }
+
+        function getEmbedUrl(url) {
+            if (!url) return '';
+
+            // Smart Autoplay Logic (Muted allows autoplay in most browsers)
+            const autoplayParam = 'autoplay=1&mute=0';
+
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                let videoId = '';
+                if (url.includes('embed/')) return url + (url.includes('?') ? '&' : '?') + autoplayParam;
+                if (url.includes('watch?v=')) videoId = url.split('watch?v=')[1].split('&')[0];
+                else if (url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
+
+                if (videoId) return `https://www.youtube.com/embed/${videoId}?${autoplayParam}&rel=0&modestbranding=1`;
+            }
+
+            if (url.includes('vimeo.com')) {
+                const videoId = url.split('/').pop();
+                return `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+            }
+
+            return url;
+        }
+
+        function renderLessons() {
+            const listEl = document.getElementById('lessonList');
+            listEl.innerHTML = course.lessons.map((lesson, idx) => {
+                const isCompleted = enrollment.completedLessons.includes(lesson.id);
+                const isActive = idx === currentLessonIndex;
+
+                return `
+                    <div class="lesson-item ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}" onclick="selectLesson(${idx})">
+                        <div class="lesson-check">
+                            ${isCompleted ? '✓' : (isActive ? '▶' : '')}
+                        </div>
+                        <div class="lesson-content">
+                            <div class="lesson-title">${lesson.title}</div>
+                            <div class="lesson-duration" style="display:flex; align-items:center; gap:0.25rem;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                ${lesson.duration}
+                            </div>
+                        </div>
+                        ${isActive ? '<div class="lesson-indicator" style="width: 4px; height: 20px; background: var(--accent-primary); border-radius: 2px;"></div>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.selectLesson = function (index) {
+            currentLessonIndex = index;
+            updateLessonDisplay();
+        };
+
+        function updateLessonDisplay() {
+            const lesson = course.lessons[currentLessonIndex];
+
+            // Animate Content Entry
+            const playerArea = document.querySelector('.player-area');
+            playerArea.style.opacity = '0';
+            playerArea.style.transform = 'translateY(10px)';
+
+            setTimeout(() => {
+                // Update DOM
+                document.getElementById('lessonTitle').textContent = lesson.title;
+                document.getElementById('lessonContent').textContent = `Now viewing: ${lesson.title}. Watch the video above to complete this lesson.`;
+
+                // Video
+                const videoContainer = document.getElementById('videoContainer');
+                if (lesson.videoUrl) {
+                    videoContainer.innerHTML = `
+                        <iframe width="100%" height="500" src="${getEmbedUrl(lesson.videoUrl)}" frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen style="border-radius: 16px; box-shadow: var(--shadow-lg);">
+                        </iframe>`;
+                } else {
+                    videoContainer.innerHTML = `<div class="video-placeholder">🎥 <p>No Video Available</p></div>`;
+                }
+
+                // Document
+                const docLink = document.getElementById('documentLink');
+                docLink.innerHTML = lesson.documentUrl ? `
+                    <a href="${lesson.documentUrl}" target="_blank" class="btn btn-outline" style="width:100%">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        Download Resources
+                    </a>` : '';
+
+                // Progress
+                enrollment = Enrollments.getById(enrollmentId);
+                document.getElementById('courseProgress').style.width = enrollment.progress + '%';
+                document.getElementById('progressText').textContent = `${enrollment.completedLessons.length}/${course.lessons.length} Completed (${enrollment.progress}%)`;
+
+                // Buttons
+                const prev = document.getElementById('prevBtn');
+                const next = document.getElementById('nextBtn');
+                const comp = document.getElementById('completeBtn');
+
+                prev.disabled = currentLessonIndex === 0;
+                next.disabled = currentLessonIndex === course.lessons.length - 1;
+
+                const isCompleted = enrollment.completedLessons.includes(lesson.id);
+                if (isCompleted) {
+                    comp.innerHTML = '✓ Completed';
+                    comp.className = 'btn btn-success'; // Use success for completed
+                    comp.disabled = true;
+                    if (!next.disabled) next.className = 'btn btn-primary'; // Highlight Next
+                } else {
+                    comp.innerHTML = 'Mark Complete (M)';
+                    comp.className = 'btn btn-primary';
+                    comp.disabled = false;
+                    next.className = 'btn btn-secondary';
+                }
+
+                renderLessons();
+
+                // Fade In
+                playerArea.style.opacity = '1';
+                playerArea.style.transform = 'translateY(0)';
+                playerArea.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            }, 50);
+        }
+
+        // --- ACTIONS ---
+        function markComplete() {
+            const lesson = course.lessons[currentLessonIndex];
+            if (enrollment.completedLessons.includes(lesson.id)) {
+                // If already completed and it was the last action that finished the course, ensure we show cert
+                if (enrollment.completed) {
+                    // check if we should show it? Maybe not strictly necessary to spam it, 
+                    // but user asked for "after completeing... only have to print".
+                    // Let's rely on the persistent button for re-viewing.
+                }
+                return;
+            }
+
+            enrollment = Enrollments.markLessonComplete(enrollmentId, lesson.id);
+
+            // Celebration only if this specific action finished the course
+            if (enrollment.completed) {
+                triggerConfetti();
+                UI.showToast('Course Completed! 🏆', 'success');
+                showCompletionCertificate();
+            } else {
+                UI.showToast('Lesson Completed!', 'success');
+                if (currentLessonIndex < course.lessons.length - 1) {
+                    setTimeout(() => nextLesson(), 1500);
+                }
+            }
+            updateLessonDisplay();
+        }
+
+        function previousLesson() {
+            if (currentLessonIndex > 0) {
+                currentLessonIndex--;
+                updateLessonDisplay();
+            }
+        }
+
+        function nextLesson() {
+            if (currentLessonIndex < course.lessons.length - 1) {
+                currentLessonIndex++;
+                updateLessonDisplay();
+            }
+        }
+
+        // --- EFFECTS ---
+        function triggerConfetti() {
+            // Simple CSS-based confetti using the UI lib or inject simple one here
+            // For now, we'll simulate 'victory' feeling via toast and sound (optional)
+            // Creating a simple particle explosion
+            for (let i = 0; i < 30; i++) {
+                createParticle();
+            }
+        }
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.position = 'fixed';
+            particle.style.left = '50%';
+            particle.style.top = '50%';
+            particle.style.width = '10px';
+            particle.style.height = '10px';
+            particle.style.backgroundColor = ['#6366f1', '#ec4899', '#10b981', '#f59e0b'][Math.floor(Math.random() * 4)];
+            particle.style.borderRadius = '50%';
+            particle.style.pointerEvents = 'none';
+            particle.style.zIndex = '9999';
+            document.body.appendChild(particle);
+
+            const destX = (Math.random() - 0.5) * window.innerWidth;
+            const destY = (Math.random() - 0.5) * window.innerHeight;
+
+            const animation = particle.animate([
+                { transform: 'translate(0, 0)', opacity: 1 },
+                { transform: `translate(${destX}px, ${destY}px)`, opacity: 0 }
+            ], {
+                duration: 1000 + Math.random() * 1000,
+                easing: 'cubic-bezier(0, .9, .57, 1)',
+                delay: Math.random() * 200
+            });
+
+            animation.onfinish = () => particle.remove();
+        }
+
+        function showCompletionCertificate() {
+            const playerLayout = document.querySelector('.learning-layout');
+            const certView = document.getElementById('certificate-view');
+
+            // Populate Data
+            document.getElementById('certStudentName').textContent = Auth.getSession().name;
+            document.getElementById('certCourseTitle').textContent = course.title;
+
+            // Use the stored completion date for consistency
+            const date = enrollment.completedAt ? new Date(enrollment.completedAt) : new Date();
+            document.getElementById('certDate').textContent = date.toLocaleDateString(undefined, { dateStyle: 'long' });
+
+            // Simulate a Cert ID based on enrollment ID
+            document.getElementById('certId').textContent = enrollment.id.replace('enroll_', 'CERT-').toUpperCase();
+
+            // Toggle Views
+            playerLayout.style.display = 'none';
+            certView.style.display = 'flex';
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function hideCertificate() {
+            const playerLayout = document.querySelector('.learning-layout');
+            const certView = document.getElementById('certificate-view');
+
+            playerLayout.style.display = 'grid'; // Restore grid layout
+            if (isFocusMode) playerLayout.style.gridTemplateColumns = '0 1fr';
+            else playerLayout.style.gridTemplateColumns = '300px 1fr';
+
+            certView.style.display = 'none';
+        }
+
+    </script>
+
+    <!-- Certificate View (Hidden by default) -->
+    <div id="certificate-view"
+        style="display: none; min-height: calc(100vh - 70px); align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem;">
+        <div
+            style="max-width: 900px; width: 100%; background: white; padding: 0; position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+
+            <!-- Decorative Header Border -->
+            <div style="height: 20px; background: linear-gradient(90deg, #6366f1 0%, #ec4899 50%, #f59e0b 100%);"></div>
+
+            <!-- Certificate Content -->
+            <div style="padding: 4rem 3rem; position: relative;">
+
+                <!-- Corner Decorations -->
+                <div
+                    style="position: absolute; top: 30px; left: 30px; width: 80px; height: 80px; border-top: 3px solid #6366f1; border-left: 3px solid #6366f1; opacity: 0.3;">
+                </div>
+                <div
+                    style="position: absolute; top: 30px; right: 30px; width: 80px; height: 80px; border-top: 3px solid #ec4899; border-right: 3px solid #ec4899; opacity: 0.3;">
+                </div>
+                <div
+                    style="position: absolute; bottom: 30px; left: 30px; width: 80px; height: 80px; border-bottom: 3px solid #f59e0b; border-left: 3px solid #f59e0b; opacity: 0.3;">
+                </div>
+                <div
+                    style="position: absolute; bottom: 30px; right: 30px; width: 80px; height: 80px; border-bottom: 3px solid #6366f1; border-right: 3px solid #6366f1; opacity: 0.3;">
+                </div>
+
+                <!-- Trophy Icon -->
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div
+                        style="display: inline-block; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3); font-size: 3.5rem;">
+                        🏆
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <h1
+                    style="text-align: center; font-size: 3.5rem; margin: 0 0 0.5rem 0; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;">
+                    Certificate
+                </h1>
+                <h2
+                    style="text-align: center; font-size: 2rem; margin: 0 0 3rem 0; color: #6b7280; font-weight: 400; letter-spacing: 4px; text-transform: uppercase;">
+                    of Completion
+                </h2>
+
+                <!-- Subtitle -->
+                <p
+                    style="text-align: center; color: #6b7280; font-size: 1.1rem; margin-bottom: 2rem; font-style: italic;">
+                    This is to certify that
+                </p>
+
+                <!-- Student Name -->
+                <div style="text-align: center; margin-bottom: 2.5rem;">
+                    <h2 id="certStudentName"
+                        style="font-size: 3rem; font-family: 'Georgia', serif; color: #1f2937; margin: 0; padding-bottom: 1rem; border-bottom: 3px solid #e5e7eb; display: inline-block; min-width: 400px; font-weight: 700;">
+                    </h2>
+                </div>
+
+                <!-- Course Info -->
+                <p
+                    style="text-align: center; color: #6b7280; font-size: 1.1rem; margin-bottom: 1rem; font-style: italic;">
+                    has successfully completed the course
+                </p>
+                <h3 id="certCourseTitle"
+                    style="text-align: center; font-size: 2.2rem; color: #1f2937; margin: 0 0 3rem 0; font-weight: 700;">
+                </h3>
+
+                <!-- Details Row -->
+                <div style="display: flex; justify-content: center; gap: 6rem; margin-bottom: 3rem;">
+                    <div style="text-align: center;">
+                        <p
+                            style="font-size: 0.85rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 0.5rem 0; font-weight: 600;">
+                            Date Completed
+                        </p>
+                        <p id="certDate" style="font-size: 1.3rem; font-weight: 700; color: #1f2937; margin: 0;">
+                        </p>
+                    </div>
+                    <div style="text-align: center;">
+                        <p
+                            style="font-size: 0.85rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 0.5rem 0; font-weight: 600;">
+                            Certificate ID
+                        </p>
+                        <p id="certId"
+                            style="font-size: 1.3rem; font-weight: 700; font-family: 'Courier New', monospace; color: #1f2937; margin: 0;">
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Seal/Badge -->
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div
+                        style="display: inline-block; width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);">
+                        <div
+                            style="width: 100px; height: 100px; border-radius: 50%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.25rem;">✓</div>
+                            <div
+                                style="font-size: 0.7rem; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 1px;">
+                                Verified</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="no-print" style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
+                    <button onclick="window.print()" class="btn btn-primary"
+                        style="min-width: 180px; padding: 1rem 2rem; font-size: 1rem; font-weight: 600;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" style="margin-right: 0.5rem; vertical-align: middle;">
+                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                            <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                        Print Certificate
+                    </button>
+                    <button onclick="hideCertificate()" class="btn btn-outline"
+                        style="min-width: 150px; padding: 1rem 2rem; font-size: 1rem; font-weight: 600;">
+                        Back to Course
+                    </button>
+                    <button onclick="window.location.href='student-dashboard.html'" class="btn btn-secondary"
+                        style="min-width: 150px; padding: 1rem 2rem; font-size: 1rem; font-weight: 600;">
+                        Dashboard
+                    </button>
+                </div>
+            </div>
+
+            <!-- Decorative Footer Border -->
+            <div style="height: 20px; background: linear-gradient(90deg, #f59e0b 0%, #ec4899 50%, #6366f1 100%);"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

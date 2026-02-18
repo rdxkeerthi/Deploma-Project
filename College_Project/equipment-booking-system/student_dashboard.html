@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | EquipBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="app-container glass-panel">
+        <header class="main-header">
+            <div class="logo">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>EquipBook <small style="font-size:0.8rem; opacity:0.7;">Student</small></span>
+            </div>
+            <div class="user-controls">
+                <span>Welcome, <strong id="user-name-display">Student</strong></span>
+                <button id="logout-btn" class="btn btn-sm btn-danger-outline">Logout</button>
+            </div>
+        </header>
+
+        <main class="dashboard-layout">
+            <!-- Sidebar / History -->
+            <aside class="sidebar glass-card">
+                <h3>My Bookings</h3>
+                <div id="history-list" class="history-list">
+                    <!-- Dynamic -->
+                </div>
+            </aside>
+
+            <!-- Main Grid -->
+            <section class="main-section">
+                <div class="section-header">
+                    <h2>Available Equipment</h2>
+                    <div class="search-bar glass-input-wrapper">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="search-input" placeholder="Search...">
+                    </div>
+                </div>
+                <div id="equipment-grid" class="equipment-grid">
+                    <!-- Dynamic Cards -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="modal">
+        <div class="modal-content glass-card slide-up">
+            <span class="close-modal">&times;</span>
+            <h3>Book <span id="modal-item-name">Item</span></h3>
+
+            <form id="booking-form">
+                <input type="hidden" id="booking-item-id">
+
+                <div class="form-group">
+                    <label for="booking-date">Date</label>
+                    <input type="date" id="booking-date" class="glass-input" required>
+                </div>
+
+                <p id="modal-availability" class="availability-text">Please select a date to check availability.</p>
+
+                <div class="form-group">
+                    <label for="booking-time">Time</label>
+                    <input type="time" id="booking-time" class="glass-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="booking-duration">Duration (Hours)</label>
+                    <input type="number" id="booking-duration" class="glass-input" value="2" min="1" max="24" required>
+                </div>
+
+                <div class="form-actions">
+                    <p id="booking-error" class="error-msg"></p>
+                    <button type="submit" id="btn-confirm-book" class="btn btn-primary full-width">Confirm
+                        Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

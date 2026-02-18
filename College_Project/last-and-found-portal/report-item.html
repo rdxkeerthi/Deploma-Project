@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Item | Nexus Retrieve</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">NEXUS RETRIEVE</a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link" id="nav-home">Live Feed</a></li>
+            <li><a href="report-item.html" class="nav-link active" id="nav-report">Report Item</a></li>
+            <li><a href="dashboard.html" class="nav-link" id="nav-dash">Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <main class="container" style="padding-top: 4rem;">
+        <h2 style="margin-bottom: 2rem;">Report an Item</h2>
+
+        <form id="report-form" class="glass-panel">
+            <div class="split-layout">
+                <!-- Left: Details -->
+                <div class="form-section">
+                    <div class="form-group">
+                        <label class="form-label">Item Title</label>
+                        <input type="text" name="title" class="form-control" placeholder="e.g. MacBook Pro Charger"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-control" required>
+                            <option value="Lost">I Lost Something</option>
+                            <option value="Found">I Found Something</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Specific Location</label>
+                        <input type="text" name="location" class="form-control" placeholder="e.g. Lab 304, Row 2"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="4"
+                            placeholder="Distinguishing features, stickers, damage..." required></textarea>
+                    </div>
+                </div>
+
+                <!-- Right: Image Upload -->
+                <div class="media-section">
+                    <label class="form-label">Evidence / Image</label>
+                    <div class="image-upload-area" onclick="document.getElementById('item-image').click()">
+                        <span>📂 Click to Upload Image</span>
+                        <img id="preview-img" alt="Preview">
+                        <input type="file" id="item-image" accept="image/*" hidden>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 1rem;">
+                        *Simulated upload will convert image to Base64 for local storage.
+                    </p>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 2rem;">Submit
+                        Report</button>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>

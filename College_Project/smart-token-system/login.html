@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus-Crave | Student Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" style="width: 100%; max-width: 400px; padding: 0;">
+        <div class="card animate-pop" style="padding: 2rem;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div
+                    style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                        <path d="M7 2v20"></path>
+                        <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                    </svg>
+                </div>
+                <h1>Welcome Back</h1>
+                <p style="color: var(--text-secondary);">Login to order your meal</p>
+            </div>
+
+            <form id="login-form">
+                <div style="margin-bottom: 1rem;">
+                    <label class="form-label" for="student-id"
+                        style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Student ID</label>
+                    <input type="text" id="student-id" required placeholder="student" value="student">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label" for="password"
+                        style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Password</label>
+                    <input type="password" id="password" required placeholder="password" value="password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                <p id="error-msg"
+                    style="color: var(--error-color); font-size: 0.875rem; margin-top: 1rem; text-align: center; display: none;">
+                    Invalid credentials</p>
+
+                <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid #eee; padding-top: 1rem;">
+                    <a href="admin-login.html"
+                        style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.2s;">
+                        Are you an admin? <span style="color: var(--primary-color); font-weight: 600;">Login here</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('login-form');
+        const errorMsg = document.getElementById('error-msg');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const studentId = document.getElementById('student-id').value;
+            const password = document.getElementById('password').value;
+
+            // Simple client-side check for demo purposes
+            if (studentId === 'student' && password === 'password') {
+                localStorage.setItem('nexus_user_token', 'true');
+                globalThis.location.href = 'index.html';
+            } else {
+                errorMsg.style.display = 'block';
+                form.classList.add('animate-shake');
+                setTimeout(() => form.classList.remove('animate-shake'), 500);
+            }
+        });
+
+        // Redirect if already logged in
+        if (localStorage.getItem('nexus_user_token')) {
+            globalThis.location.href = 'index.html';
+        }
+    </script>
+
+    <style>
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .animate-shake {
+            animation: shake 0.3s ease;
+        }
+    </style>
+</body>
+
+</html>

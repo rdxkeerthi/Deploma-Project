@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal | College Fest 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="app-container glass-panel">
+        <header class="main-header">
+            <div class="logo">
+                <i class="fa-solid fa-star-shooting"></i>
+                <span>College Fest <small>2026</small></span>
+            </div>
+            <div class="header-actions">
+                <button id="my-registrations-btn" class="btn btn-sm btn-secondary">
+                    <i class="fa-solid fa-ticket"></i>
+                    My Registrations
+                </button>
+                <button id="logout-btn" class="btn btn-sm btn-danger-outline">
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <main class="student-layout">
+            <!-- Hero Banner -->
+            <div class="hero-banner glass-card">
+                <h2>Discover Amazing Events</h2>
+                <p>Register for cultural, technical, sports, and literary events</p>
+                <div class="search-filter-bar">
+                    <div class="search-box">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="search-events" placeholder="Search events..." class="glass-input">
+                    </div>
+                    <select id="category-filter" class="glass-input">
+                        <option value="">All Categories</option>
+                        <option value="Cultural">Cultural</option>
+                        <option value="Technical">Technical</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Literary">Literary</option>
+                        <option value="Arts">Arts</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Events Grid -->
+            <div class="events-grid" id="events-grid">
+                <!-- Dynamic event cards will be inserted here -->
+                <div class="empty-state-card glass-card">
+                    <i class="fa-solid fa-calendar-xmark"></i>
+                    <h3>No Events Available</h3>
+                    <p>Check back later for exciting events!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="registration-modal" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-modal">&times;</span>
+            <h3>Register for Event</h3>
+            <div id="modal-event-info" class="event-info-banner">
+                <!-- Event details will be inserted here -->
+            </div>
+            <form id="registration-form">
+                <input type="hidden" id="reg-event-id">
+                <div class="form-group">
+                    <label for="student-name">
+                        <i class="fa-solid fa-user"></i>
+                        Full Name
+                    </label>
+                    <input type="text" id="student-name" class="glass-input" placeholder="Enter your full name"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="student-email">
+                        <i class="fa-solid fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input type="email" id="student-email" class="glass-input" placeholder="your.email@college.edu"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="student-department">
+                        <i class="fa-solid fa-building-columns"></i>
+                        Department
+                    </label>
+                    <select id="student-department" class="glass-input" required>
+                        <option value="">Select Department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Mechanical">Mechanical</option>
+                        <option value="Civil">Civil</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="IT">Information Technology</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <p id="registration-error" class="error-msg"></p>
+                <button type="submit" class="btn btn-primary full-width">
+                    <i class="fa-solid fa-check-circle"></i>
+                    Confirm Registration
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Ticket Modal -->
+    <div id="ticket-modal" class="modal">
+        <div class="modal-content glass-card ticket-card">
+            <span class="close-modal">&times;</span>
+            <div class="ticket-header">
+                <i class="fa-solid fa-circle-check"></i>
+                <h2>Registration Successful!</h2>
+            </div>
+            <div class="ticket-body" id="ticket-details">
+                <!-- Ticket details will be inserted here -->
+            </div>
+            <div class="ticket-footer">
+                <p><i class="fa-solid fa-info-circle"></i> Save this confirmation for event entry</p>
+                <button class="btn btn-primary"
+                    onclick="document.getElementById('ticket-modal').classList.remove('active')">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Registrations Modal -->
+    <div id="my-registrations-modal" class="modal">
+        <div class="modal-content glass-card large-modal">
+            <span class="close-modal">&times;</span>
+            <h3><i class="fa-solid fa-list-check"></i> My Registrations</h3>
+            <div id="my-registrations-list" class="registrations-list">
+                <!-- User's registrations will be listed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

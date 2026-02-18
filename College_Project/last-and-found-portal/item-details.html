@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details | Nexus Retrieve</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">NEXUS RETRIEVE</a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link" id="nav-home">Live Feed</a></li>
+            <li><a href="report-item.html" class="nav-link" id="nav-report">Report Item</a></li>
+            <li><a href="dashboard.html" class="nav-link" id="nav-dash">Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <main class="container details-container" id="details-container">
+        <!-- Hero Image -->
+        <img id="detail-img"
+            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWUyOTNiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZpbGw9IiM5NGEzYjgiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5vIEltYWdlIFByb3ZpZGVkPC90ZXh0Pjwvc3ZnPg=="
+            class="details-image-hero" alt="Item Image">
+
+        <div class="glass-panel">
+            <div class="details-header">
+                <div>
+                    <h1 id="detail-title" class="hero-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                        Loading...</h1>
+                    <div id="detail-status"></div>
+                </div>
+                <div id="action-area">
+                    <!-- Buttons injected by JS if owner -->
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>Description</h3>
+                    <p id="detail-desc" style="color: var(--text-secondary);">...</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Location</h3>
+                    <p id="detail-loc" style="color: var(--text-secondary);">...</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Date Reported</h3>
+                    <p id="detail-date" style="color: var(--text-secondary);">...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Handover Modal is Injected by script.js -->
+    <script src="js/script.js"></script>
+</body>
+
+</html>

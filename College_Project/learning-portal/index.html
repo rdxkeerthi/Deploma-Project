@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Learning Portal</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -250px;
+            right: -250px;
+        }
+
+        .login-container::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            bottom: -200px;
+            left: -200px;
+        }
+
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 450px;
+            max-width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: var(--accent-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .login-logo svg {
+            width: 48px;
+            height: 48px;
+            fill: white;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .role-option {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .role-option:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .role-option.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .role-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 0.75rem;
+        }
+
+        .role-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: white;
+        }
+
+        .role-name {
+            font-weight: 600;
+            color: white;
+        }
+
+        .login-form .form-control {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .login-form .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .login-form .form-control:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .login-form .form-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .demo-credentials {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .demo-credentials strong {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-card fade-in">
+            <div class="login-header">
+                <div class="login-logo">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3ZM18.82 9L12 12.72L5.18 9L12 5.28L18.82 9ZM17 15.99L12 18.72L7 15.99V12.27L12 15L17 12.27V15.99Z" />
+                    </svg>
+                </div>
+                <h1 class="login-title">Learning Portal</h1>
+                <p class="login-subtitle">Access your courses and learning materials</p>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <div class="role-selector">
+                    <div class="role-option active" data-role="student">
+                        <div class="role-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" />
+                            </svg>
+                        </div>
+                        <div class="role-name">Student</div>
+                    </div>
+                    <div class="role-option" data-role="staff">
+                        <div class="role-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12 2L1 7V9H23V7L12 2ZM3 11V17H5V11H3ZM19 11V17H21V11H19ZM7 11V17H9V11H7ZM11 11V17H13V11H11ZM15 11V17H17V11H15ZM2 19V21H22V19H2Z" />
+                            </svg>
+                        </div>
+                        <div class="role-name">Staff</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    Sign In
+                </button>
+
+                <div class="demo-credentials">
+                    <strong>Demo Credentials:</strong><br>
+                    <strong>Student:</strong> john@student.com or jane@student.com<br>
+                    <strong>Staff:</strong> admin@lms.com
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+        let selectedRole = 'student';
+
+        // Role selection
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                selectedRole = option.dataset.role;
+            });
+        });
+
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const session = Auth.login(email, selectedRole);
+
+            if (session) {
+                UI.showToast(`Welcome, ${session.name}!`, 'success');
+
+                setTimeout(() => {
+                    if (session.role === 'staff') {
+                        window.location.href = 'staff-dashboard.html';
+                    } else {
+                        window.location.href = 'student-dashboard.html';
+                    }
+                }, 1000);
+            } else {
+                UI.showToast('Invalid credentials. Please check the demo credentials.', 'error');
+            }
+        });
+
+        // Redirect if already logged in
+        if (Auth.isAuthenticated()) {
+            const session = Auth.getSession();
+            if (session.role === 'staff') {
+                window.location.href = 'staff-dashboard.html';
+            } else {
+                window.location.href = 'student-dashboard.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

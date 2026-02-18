@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Nexus Retrieve</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">NEXUS RETRIEVE</a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link" id="nav-home">Live Feed</a></li>
+            <li><a href="report-item.html" class="nav-link" id="nav-report">Report Item</a></li>
+            <li><a href="dashboard.html" class="nav-link active" id="nav-dash">Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <h1 style="margin: 3rem 0 2rem;">My Activity</h1>
+
+        <div class="dashboard-grid">
+            <!-- Sidebar -->
+            <aside class="glass-panel sidebar">
+                <div class="sidebar-menu">
+                    <div class="sidebar-item active">My Reports</div>
+                    <div class="sidebar-item">Resolved (History)</div>
+                    <div class="sidebar-item">Account Settings</div>
+                    <div class="sidebar-item" style="color: var(--danger); margin-top: 2rem;">Log Out</div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <section>
+                <div class="glass-panel" style="margin-bottom: 2rem;">
+                    <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Active Reports</h2>
+                    <div id="my-items-list">
+                        <!-- Injected by script.js -->
+                        <p style="color: var(--text-secondary);">Loading your items...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>

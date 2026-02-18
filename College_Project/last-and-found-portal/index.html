@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Retrieve | Campus Lost & Found</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">NEXUS RETRIEVE</a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link active" id="nav-home">Live Feed</a></li>
+            <li><a href="report-item.html" class="nav-link" id="nav-report">Report Item</a></li>
+            <li><a href="dashboard.html" class="nav-link" id="nav-dash">Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Reclaim What's Yours</h1>
+            <p class="hero-subtitle">The advanced decentralized recovery system for campus assets. Report lost items or
+                claim what you've found in seconds.</p>
+
+            <div class="search-bar-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" class="main-search form-control"
+                    placeholder="Search for 'Blue Water Bottle' or 'Library'...">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Live Feed -->
+    <main class="container">
+        <div id="items-feed" class="items-grid">
+            <!-- Items will be injected here by script.js -->
+        </div>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Fest 2026 | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="login-page">
+        <div class="login-container glass-panel">
+            <div class="fest-branding">
+                <i class="fa-solid fa-star-shooting"></i>
+                <h1>College Fest 2026</h1>
+                <p class="tagline">Where Talent Meets Opportunity</p>
+            </div>
+
+            <!-- Role Selection Tabs -->
+            <div class="role-tabs">
+                <button class="role-tab active" data-role="student">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>Student</span>
+                </button>
+                <button class="role-tab" data-role="admin">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>Admin</span>
+                </button>
+            </div>
+
+            <!-- Student Login Form -->
+            <div id="student-form" class="login-form active">
+                <h3>Student Access</h3>
+                <p class="form-subtitle">Browse and register for exciting events</p>
+                <button id="student-enter-btn" class="btn btn-primary btn-large">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    Enter Portal
+                </button>
+            </div>
+
+            <!-- Admin Login Form -->
+            <div id="admin-form" class="login-form">
+                <h3>Admin Login</h3>
+                <p class="form-subtitle">Manage events and registrations</p>
+                <form id="admin-login-form">
+                    <div class="form-group">
+                        <label for="admin-password">
+                            <i class="fa-solid fa-lock"></i>
+                            Password
+                        </label>
+                        <input type="password" id="admin-password" class="glass-input"
+                            placeholder="Enter admin password" required>
+                    </div>
+                    <p id="login-error" class="error-msg"></p>
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fa-solid fa-sign-in-alt"></i>
+                        Access Dashboard
+                    </button>
+                </form>
+                <p class="hint-text">Hint: admin123</p>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card glass-card">
+                <i class="fa-solid fa-calendar-days"></i>
+                <h4>Multiple Events</h4>
+                <p>Cultural, Technical, Sports & More</p>
+            </div>
+            <div class="feature-card glass-card">
+                <i class="fa-solid fa-ticket"></i>
+                <h4>Easy Registration</h4>
+                <p>Quick & Hassle-free Process</p>
+            </div>
+            <div class="feature-card glass-card">
+                <i class="fa-solid fa-trophy"></i>
+                <h4>Win Prizes</h4>
+                <p>Exciting Rewards Await</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Learning Portal</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand" style="display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                    style="fill: url(#brandGradient);">
+                    <defs>
+                        <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path
+                        d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3ZM18.82 9L12 12.72L5.18 9L12 5.28L18.82 9ZM17 15.99L12 18.72L7 15.99V12.27L12 15L17 12.27V15.99Z" />
+                </svg>
+                <span>Learning Portal</span>
+            </div>
+            <div class="navbar-menu">
+                <a href="student-dashboard.html" class="navbar-link active">Dashboard</a>
+                <span id="userName" style="color: var(--text-secondary);"></span>
+                <button class="theme-toggle" onclick="UI.toggleTheme()" title="Toggle Theme">
+                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                        class="theme-icon">
+                        <path
+                            d="M12 3V4M12 20V21M4 12H3M6.31412 6.31412L5.5 5.5M17.6859 6.31412L18.5 5.5M6.31412 17.69L5.5 18.5M17.6859 17.69L18.5 18.5M21 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            fill="none" />
+                    </svg>
+                </button>
+                <button class="btn btn-secondary" onclick="Auth.logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 3rem;">
+        <!-- Hero Section -->
+        <div class="glass-card mb-4" style="text-align: center; padding: 3rem;">
+            <h1 style="margin-bottom: 1rem;">Welcome back, <span id="userNameHero"></span>!</h1>
+            <p style="color: var(--text-secondary); font-size: 1.125rem;">Continue your learning journey</p>
+        </div>
+
+        <!-- My Courses -->
+        <div class="mb-4">
+            <h2 class="mb-3">My Courses</h2>
+            <div id="myCoursesGrid" class="grid grid-3">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Available Courses -->
+        <div>
+            <div class="flex-between mb-3">
+                <h2>Available Courses</h2>
+                <input type="text" id="searchInput" class="form-control" placeholder="Search courses..."
+                    style="max-width: 300px;">
+            </div>
+            <div id="availableCoursesGrid" class="grid grid-3">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Certificates Section -->
+        <div class="glass-card" style="margin-top: 2rem;">
+            <div class="flex-between mb-3">
+                <h2>🏆 My Certificates</h2>
+            </div>
+            <div id="certificatesList">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/courses.js"></script>
+    <script src="js/enrollments.js"></script>
+    <script>
+        // Require student authentication
+        Auth.requireAuth('student');
+
+        const session = Auth.getSession();
+        document.getElementById('userName').textContent = session.name;
+        document.getElementById('userNameHero').textContent = session.name;
+
+        // Load my courses
+        function loadMyCourses() {
+            const enrollments = Enrollments.getByStudent(session.userId);
+            const grid = document.getElementById('myCoursesGrid');
+
+            if (enrollments.length === 0) {
+                grid.innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><div class="empty-state-icon">📚</div><div class="empty-state-text">You haven\'t enrolled in any courses yet</div></div>';
+                return;
+            }
+
+            grid.innerHTML = enrollments.map(enrollment => {
+                const course = enrollment.course;
+                return `
+                    <div class="course-card">
+                        <div class="course-thumbnail">${course.title.charAt(0)}</div>
+                        <div class="course-content">
+                            <h3 class="course-title">${course.title}</h3>
+                            <p class="course-instructor">👨‍🏫 ${course.instructor}</p>
+                            <div class="progress-bar mt-2">
+                                <div class="progress-fill" style="width: ${enrollment.progress}%"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                                <span class="text-muted" style="font-size: 0.875rem;">${enrollment.progress}% Complete</span>
+                                ${enrollment.completed
+                        ? '<span class="badge badge-success">Completed</span>'
+                        : '<span class="badge badge-info">In Progress</span>'
+                    }
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="continueLearning('${enrollment.id}')">
+                                ${enrollment.progress === 0 ? 'Start Learning' : 'Continue Learning'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load available courses
+        function loadAvailableCourses(searchQuery = '') {
+            const allCourses = searchQuery ? Courses.search(searchQuery) : Courses.getAll();
+            const enrolledCourseIds = Enrollments.getByStudent(session.userId).map(e => e.courseId);
+            const availableCourses = allCourses.filter(c => !enrolledCourseIds.includes(c.id));
+
+            const grid = document.getElementById('availableCoursesGrid');
+
+            if (availableCourses.length === 0) {
+                grid.innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><div class="empty-state-icon">🎯</div><div class="empty-state-text">No courses available</div></div>';
+                return;
+            }
+
+            grid.innerHTML = availableCourses.map(course => `
+                <div class="course-card">
+                    <div class="course-thumbnail">${course.title.charAt(0)}</div>
+                    <div class="course-content">
+                        <h3 class="course-title">${course.title}</h3>
+                        <p class="course-instructor">👨‍🏫 ${course.instructor}</p>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">${course.description}</p>
+                        <div class="course-meta">
+                            <span>⏱️ ${course.duration}</span>
+                            <span>📚 ${course.lessons.length} lessons</span>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="enrollInCourse('${course.id}')">
+                            Enroll Now
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            loadAvailableCourses(e.target.value);
+        });
+
+        // Load certificates
+        function loadCertificates() {
+            const enrollments = Enrollments.getByStudent(session.userId);
+            const completedEnrollments = enrollments.filter(e => e.completed);
+            const container = document.getElementById('certificatesList');
+
+            if (completedEnrollments.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🎓</div>
+                        <p>Complete a course to earn your first certificate!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = completedEnrollments.map(enrollment => {
+                const course = enrollment.course;
+                if (!course) return '';
+
+                const completedDate = enrollment.completedAt
+                    ? new Date(enrollment.completedAt).toLocaleDateString(undefined, { dateStyle: 'long' })
+                    : 'Unknown';
+
+                const certId = enrollment.id.replace('enroll_', 'CERT-').toUpperCase();
+
+                return `
+                    <div class="glass-card" style="padding: 1.5rem; margin-bottom: 1rem; border: 2px solid var(--accent-primary);">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                                    <div style="font-size: 2.5rem;">🏆</div>
+                                    <div>
+                                        <h3 style="margin: 0; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${course.title}</h3>
+                                        <p style="color: var(--text-secondary); margin: 0.25rem 0 0 0; font-size: 0.9rem;">Certificate of Completion</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 2rem; margin-top: 1rem; padding-left: 3.5rem;">
+                                    <div>
+                                        <p style="font-size: 0.8rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin: 0;">Completed</p>
+                                        <p style="font-weight: 600; margin: 0.25rem 0 0 0;">${completedDate}</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 0.8rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin: 0;">Certificate ID</p>
+                                        <p style="font-weight: 600; font-family: monospace; margin: 0.25rem 0 0 0;">${certId}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem; flex-direction: column;">
+                                <button class="btn btn-primary" onclick="viewCertificate('${enrollment.id}')" style="white-space: nowrap;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    View Certificate
+                                </button>
+                                <button class="btn btn-outline" onclick="downloadCertificate('${enrollment.id}')" style="white-space: nowrap;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                        <rect x="6" y="14" width="12" height="8"></rect>
+                                    </svg>
+                                    Print/Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewCertificate(enrollmentId) {
+            window.location.href = `learning-player.html?id=${enrollmentId}&showCert=true`;
+        }
+
+        function downloadCertificate(enrollmentId) {
+            const url = `learning-player.html?id=${enrollmentId}&showCert=true`;
+            const printWindow = window.open(url, '_blank');
+
+            if (printWindow) {
+                printWindow.addEventListener('load', () => {
+                    setTimeout(() => {
+                        printWindow.print();
+                    }, 500);
+                });
+            }
+        }
+
+        // Enroll in course
+        function enrollInCourse(courseId) {
+            Enrollments.enroll(session.userId, courseId);
+            UI.showToast('Successfully enrolled in course!', 'success');
+            loadMyCourses();
+            loadAvailableCourses();
+        }
+
+        // Continue learning
+        function continueLearning(enrollmentId) {
+            window.location.href = `learning-player.html?id=${enrollmentId}`;
+        }
+
+        // Initial load
+        loadMyCourses();
+        loadAvailableCourses();
+        loadCertificates();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,186 @@
+/* styles.css */
+@import 'theme.css';
+
+/* Layout Utilities */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.gap-4 {
+    gap: 1rem;
+}
+
+.grid {
+    display: grid;
+}
+
+/* Components */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+    background-color: #f0f0f0;
+}
+
+.card {
+    background: var(--surface-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+    transform: translateY(-4px) rotateX(2deg);
+    box-shadow: var(--shadow-lg);
+}
+
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: var(--glass-border);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Cart Overlay */
+.cart-overlay {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    z-index: 100;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cart-overlay.active {
+    transform: translateY(0);
+}
+
+/* Animations */
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.animate-pop {
+    animation: pop 0.3s ease;
+}
+
+/* Form Elements */
+input,
+select {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: var(--radius-md);
+    width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 111, 0, 0.2);
+}
+
+/* Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: var(--surface-color);
+    border-top: 1px solid #eee;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-around;
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+    background-color: rgba(255, 111, 0, 0.1);
+}
+
+.nav-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
