@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Projects Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a1a;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.18);
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a8;
+            --text-muted: #55557a;
+            --accent-1: #6366f1;
+            --accent-2: #8b5cf6;
+            --accent-3: #ec4899;
+            --accent-4: #06b6d4;
+            --accent-5: #10b981;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-glow-1 {
+            top: -200px;
+            left: -100px;
+            background: var(--accent-1);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-glow-2 {
+            bottom: -200px;
+            right: -100px;
+            background: var(--accent-3);
+            animation: float 25s ease-in-out infinite reverse;
+        }
+
+        .bg-glow-3 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--accent-2);
+            width: 400px;
+            height: 400px;
+            opacity: 0.08;
+            animation: float 30s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            25% {
+                transform: translate(40px, -30px);
+            }
+
+            50% {
+                transform: translate(-20px, 40px);
+            }
+
+            75% {
+                transform: translate(30px, 20px);
+            }
+        }
+
+        /* Layout */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* Header */
+        .hero {
+            text-align: center;
+            padding: 4rem 0 3rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-5);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1.5px;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #c4c4e0 50%, var(--accent-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1rem;
+        }
+
+        .project-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.75rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(12px);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            padding: 1px;
+            background: linear-gradient(135deg, transparent 40%, var(--card-accent, var(--accent-1)) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-6px);
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            box-shadow:
+                0 20px 40px -12px rgba(0, 0, 0, 0.5),
+                0 0 60px -20px var(--card-accent, var(--accent-1));
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.25rem;
+            background: linear-gradient(135deg, var(--card-accent, var(--accent-1)), transparent);
+            opacity: 0.9;
+        }
+
+        .card-number {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.3px;
+        }
+
+        .card-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            flex: 1;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .tag {
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            letter-spacing: 0.3px;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .card-link {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--card-accent, var(--accent-1));
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.3s ease;
+        }
+
+        .project-card:hover .card-link {
+            gap: 0.7rem;
+        }
+
+        .card-link .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover .card-link .arrow {
+            transform: translateX(3px);
+        }
+
+        .card-pages {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Card accent colors */
+        .project-card:nth-child(1) {
+            --card-accent: #6366f1;
+        }
+
+        .project-card:nth-child(2) {
+            --card-accent: #f43f5e;
+        }
+
+        .project-card:nth-child(3) {
+            --card-accent: #06b6d4;
+        }
+
+        .project-card:nth-child(4) {
+            --card-accent: #f59e0b;
+        }
+
+        .project-card:nth-child(5) {
+            --card-accent: #10b981;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 0 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .footer a:hover {
+            color: var(--accent-2);
+        }
+
+        /* Entrance animation */
+        .project-card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: card-enter 0.6s ease forwards;
+        }
+
+        .project-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .project-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .project-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .project-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .project-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes card-enter {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero {
+            opacity: 0;
+            animation: fade-in 0.8s ease forwards;
+        }
+
+        @keyframes fade-in {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem 1rem 3rem;
+            }
+
+            .hero {
+                padding: 2.5rem 0 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <div class="container">
+        <header class="hero">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                5 Projects • HTML / CSS / JS
+            </div>
+            <h1>College Projects Hub</h1>
+            <p>A collection of web-based college management systems built with vanilla HTML, CSS & JavaScript.</p>
+        </header>
+
+        <section class="projects-grid">
+
+            <!-- 1. Equipment Booking System -->
+            <a href="./equipment-booking-system/index.html" class="project-card">
+                <span class="card-number">01</span>
+                <div class="card-icon">📦</div>
+                <h2 class="card-title">Equipment Booking System</h2>
+                <p class="card-desc">Browse, search, and book college equipment like cameras, laptops & projectors.
+                    Admin panel for inventory management.</p>
+                <div class="card-tags">
+                    <span class="tag">localStorage</span>
+                    <span class="tag">Glassmorphism</span>
+                    <span class="tag">Role Auth</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-link">Open Project <span class="arrow">→</span></span>
+                    <span class="card-pages">3 pages</span>
+                </div>
+            </a>
+
+            <!-- 2. Fest Registration Portal -->
+            <a href="./fest-registration-portal/index.html" class="project-card">
+                <span class="card-number">02</span>
+                <div class="card-icon">🎪</div>
+                <h2 class="card-title">Fest Registration Portal</h2>
+                <p class="card-desc">College fest event management with student registration, seat tracking, e-tickets,
+                    and admin dashboard.</p>
+                <div class="card-tags">
+                    <span class="tag">Events CRUD</span>
+                    <span class="tag">Seat Limits</span>
+                    <span class="tag">E-Tickets</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-link">Open Project <span class="arrow">→</span></span>
+                    <span class="card-pages">3 pages</span>
+                </div>
+            </a>
+
+            <!-- 3. Lost & Found Portal -->
+            <a href="./last-and-found-portal/index.html" class="project-card">
+                <span class="card-number">03</span>
+                <div class="card-icon">🔍</div>
+                <h2 class="card-title">Lost & Found Portal</h2>
+                <p class="card-desc">Report lost or found items, browse the feed, view details, and securely manage
+                    handovers with ID verification.</p>
+                <div class="card-tags">
+                    <span class="tag">Image Upload</span>
+                    <span class="tag">Handover</span>
+                    <span class="tag">SPA Router</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-link">Open Project <span class="arrow">→</span></span>
+                    <span class="card-pages">4 pages</span>
+                </div>
+            </a>
+
+            <!-- 4. Learning Portal -->
+            <a href="./learning-portal/index.html" class="project-card">
+                <span class="card-number">04</span>
+                <div class="card-icon">📚</div>
+                <h2 class="card-title">Learning Portal (LMS)</h2>
+                <p class="card-desc">Full-featured LMS with course enrollment, video lessons, progress tracking,
+                    certificates, and staff management.</p>
+                <div class="card-tags">
+                    <span class="tag">Modular JS</span>
+                    <span class="tag">Video Player</span>
+                    <span class="tag">Progress</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-link">Open Project <span class="arrow">→</span></span>
+                    <span class="card-pages">4 pages</span>
+                </div>
+            </a>
+
+            <!-- 5. Smart Token System -->
+            <a href="./smart-token-system/index.html" class="project-card">
+                <span class="card-number">05</span>
+                <div class="card-icon">🍽️</div>
+                <h2 class="card-title">Smart Token System</h2>
+                <p class="card-desc">Canteen ordering with digital wallet, menu browsing, cart checkout, token-based
+                    tracking, and an admin panel.</p>
+                <div class="card-tags">
+                    <span class="tag">ES Modules</span>
+                    <span class="tag">Wallet</span>
+                    <span class="tag">Token IDs</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-link">Open Project <span class="arrow">→</span></span>
+                    <span class="card-pages">6 pages</span>
+                </div>
+            </a>
+
+        </section>
+
+        <footer class="footer">
+            <p>Built with ❤️ for College Coursework &nbsp;•&nbsp; <a href="https://github.com"
+                    target="_blank">GitHub</a></p>
+        </footer>
+    </div>
+</body>
+
+</html>
